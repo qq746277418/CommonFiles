@@ -1,0 +1,86 @@
+ 
+1.简介
+这一节介绍一些关于栈操作、数据类型判断的LUA API，可以使用这些函数获得脚本中的变量值。
+
+2.步骤
+编写 test01.lua 脚本，在VS2003中创建控制台C++程序并正确配置，执行查看结果，修改test02.lua脚本后查看执行结果 
+
+3.测试脚本
+以下是用来测试的lua脚本
+
+function plustwo(x)    
+      local a = 2;    
+      return x+a;
+end;
+rows = 6;
+cols = plustwo(rows);
+
+上面的脚本定义了一个函数、两个全局变量（LUA脚本变量默认是全局的）。之后的C++程序中，我们将通过栈操作获得这两个变量 rows, cols
+
+4.控制台程序
+#include <iostream>
+
+extern "C"
+{
+    #include "lua.h"
+    #include "lauxlib.h"
+    #include "lualib.h"
+}
+
+using namespace std;
+
+int main(int argc, char* argv[])
+{
+    cout << "01_Read_Stack" << endl;
+
+    /**//* Create a LUA VMachine */
+    lua_State *L = lua_open();
+    luaopen_base(L);
+    luaopen_table(L);
+    luaL_openlibs(L);
+    luaopen_string(L);
+    luaopen_math(L);
+
+    int iError;
+    iError = luaL_loadfile(L, "../test01.lua");
+    if (iError)
+    {
+        cout << "Load script FAILED!" << lua_tostring(L, -1)<< endl;
+        lua_close(L);
+        return 1;
+    }
+    iError = lua_pcall(L, 0, 0, 0);
+    if (iError)
+    {
+        cout << "pcall FAILED"<< lua_tostring(L, -1)<< iError<< endl;
+        lua_close(L);
+        return 1;
+    }
+    
+    lua_getglobal(L, "rows");
+    lua_getglobal(L, "cols");
+
+    if (!lua_isnumber(L, -2))
+   {
+        cout << "[rows] is not a number" << endl;
+        lua_close(L);
+        return 1;
+    }
+    if (!lua_isnumber(L, -1))
+    {
+        cout << "[cols] is not a number" << endl;
+        lua_close(L);
+        return 1;
+    }
+    cout << "[rows]"
+         << static_cast<int> (lua_tonumber(L, -2))
+         << "[cols]"
+         << static_cast<int> (lua_tonumber(L, -1))
+         << endl;
+
+    lua_pop(L,2);
+    lua_close(L);
+    return 0;
+}
+
+

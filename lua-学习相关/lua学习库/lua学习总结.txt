@@ -1,0 +1,633 @@
+3."Hello, world!" 
+　　现在开始偶们的第一个小程序"Hello, world!" 
+　　把以下程序打入文件e01.lua 
+　　 
+　　例1:e01.lua 
+　　-- Hello World in Lua 
+　　print("Hello World.") 
+　　 
+　　Lua有两种执行方式，一种是嵌入到C程序中执行，还有一种是直接从命令行方式下执行。 
+　　这里为了调试方便，采用第二种方式，执行命令 lua e01.lua 
+　　 
+　　输出结果应该是： 
+　　Hello World. 
+　　 
+4.程序说明 
+　　第一行 -- Hello World in Lua 
+　　这句是注释，其中--和C++中的//意思是一样的 
+　　第二行 print("Hello World.") 
+　　调用lua内部命令print，输出"Hello World."字符串到屏幕，Lua中的字符串全部是由"括起来的。 
+　　这个命令是一个函数的调用，print是lua的一个函数，而"Hello World."是print的参数。 
+　　 
+5.试试看 
+　　在Lua中有不少字符串的处理操作，本次的课后试试看的内容就是，找出连接两个字符串的操作， 
+　　并且print出来。 
+
+二.流程控制 
+
+1. 函数的使用 
+　　以下程序演示了如何在Lua中使用函数, 及局部变量 
+　　例e02.lua 
+　　-- functions 
+　　function pythagorean(a, b) 
+　　local c2 = a^2 + b^2 
+　　return sqrt(c2) 
+　　end 
+　　print(pythagorean(3,4)) 
+　　 
+　　运行结果 
+　　5 
+　　 
+　　程序说明 
+　　在Lua中函数的定义格式为: 
+　　function 函数名(参数) 
+　　... 
+　　end 
+　　与Pascal语言不同, end不需要与begin配对, 只需要在函数结束后打个end就可以了. 
+　　本例函数的作用是已知直角三角形直角边, 求斜边长度. 参数a,b分别表示直角边长, 
+　　在函数内定义了local形变量用于存储斜边的平方. 与C语言相同, 定义在函数内的代 
+　　码不会被直接执行, 只有主程序调用时才会被执行. 
+　　local表示定义一个局部变量, 如果不加local刚表示c2为一个全局变量, local的作用域 
+　　是在最里层的end和其配对的关键字之间, 如if ... end, while ... end等。全局变量的 
+　　作用域是整个程序。 
+　　 
+　　2. 循环语句 
+　　例e03.lua 
+　　-- Loops 
+　　for i=1,5 do 
+　　print("i is now " .. i) 
+　　end 
+　　 
+　　运行结果 
+　　i is now 1 
+　　i is now 2 
+　　i is now 3 
+　　i is now 4 
+　　i is now 5 
+　　 
+　　程序说明 
+　　这里偶们用到了for语句 
+　　for 变量 = 参数1, 参数2, 参数3 do 
+　　循环体 
+　　end 
+　　变量将以参数3为步长, 由参数1变化到参数2 
+　　例如: 
+　　for i=1,f(x) do print(i) end 
+　　for i=10,1,-1 do print(i) end 
+　　 
+　　这里print("i is now " .. i)中，偶们用到了..，这是用来连接两个字符串的， 
+　　偶在(1)的试试看中提到的，不知道你们答对了没有。 
+　　虽然这里i是一个整型量，Lua在处理的时候会自动转成字符串型，不需偶们费心。 
+　　 
+　　3. 条件分支语句 
+　　例e04.lua 
+　　-- Loops and conditionals 
+　　for i=1,5 do 
+　　print(“i is now “ .. i) 
+　　　　　if i < 2 then 
+　　　　　print(“small”) 
+　　　　　elseif i < 4 then 
+　　　　　print(“medium”) 
+　　　　　else 
+　　　　　print(“big”) 
+　　　　　end 
+　　end 
+　　 
+　　运行结果 
+　　i is now 1 
+　　small 
+　　i is now 2 
+　　medium 
+　　i is now 3 
+　　medium 
+　　i is now 4 
+　　big 
+　　i is now 5 
+　　big 
+　　 
+　　程序说明 
+　　if else用法比较简单, 类似于C语言, 不过此处需要注意的是整个if只需要一个end, 
+　　哪怕用了多个elseif, 也是一个end. 
+　　例如 
+　　　　if op == "+" then 
+　　　　　r = a + b 
+　　　　elseif op == "-" then 
+　　　　　r = a - b 
+　　　　elseif op == "*" then 
+　　　　　r = a*b 
+　　　　elseif op == "/" then 
+　　　　　r = a/b 
+　　　　else 
+　　　　　error("invalid operation") 
+　　　　end 
+　　 
+　　 
+　　4.试试看 
+　　Lua中除了for循环以外, 还支持多种循环, 请用while...do和repeat...until改写本文中的for程序 
+
+三.Lua数据结构 
+
+　1.简介 
+　　Lua语言只有一种基本数据结构, 那就是table, 所有其他数据结构如数组啦, 
+　　类啦, 都可以由table实现. 
+　　例e05.lua 
+　　-- Arrays 
+　　myData = {} 
+　　myData[0] = “foo” 
+　　myData[1] = 42 
+　　 
+　　-- Hash tables 
+　　myData[“bar”] = “baz” 
+　　 
+　　-- Iterate through the 
+　　-- structure 
+　　for key, value in myData do 
+　　print(key .. “=“ .. value) 
+　　end 
+　　 
+　　输出结果 
+　　0=foo 
+　　1=42 
+　　bar=baz 
+　　 
+　　程序说明 
+　　首先定义了一个table myData={}, 然后用数字作为下标赋了两个值给它. 这种 
+　　定义方法类似于C中的数组, 但与数组不同的是, 每个数组元素不需要为相同类型, 
+　　就像本例中一个为整型, 一个为字符串. 
+　　 
+　　程序第二部分, 以字符串做为下标, 又向table内增加了一个元素. 这种table非常 
+　　像STL里面的map. table下标可以为Lua所支持的任意基本类型, 除了nil值以外. 
+　　 
+　　Lua对Table占用内存的处理是自动的, 如下面这段代码 
+　　　　a = {} 
+　　　　a["x"] = 10 
+　　　　b = a　　　-- `b' refers to the same table as `a' 
+　　　　print(b["x"])　--> 10 
+　　　　b["x"] = 20 
+　　　　print(a["x"])　--> 20 
+　　　　a = nil　　-- now only `b' still refers to the table 
+　　　　b = nil　　-- now there are no references left to the table 
+　　b和a都指向相同的table, 只占用一块内存, 当执行到a = nil时, b仍然指向table, 
+　　而当执行到b=nil时, 因为没有指向table的变量了, 所以Lua会自动释放table所占内存 
+　　 
+　　3.Table的嵌套 
+　　Table的使用还可以嵌套，如下例 
+　　例e06.lua 
+　　-- Table ‘constructor’ 
+　　myPolygon = { 
+　　color=“blue”, 
+　　thickness=2, 
+　　npoints=4; 
+　　{x=0,　 y=0}, 
+　　{x=-10, y=0}, 
+　　{x=-5,　y=4}, 
+　　{x=0,　 y=4} 
+　　} 
+　　 
+　　-- Print the color 
+　　print(myPolygon[“color”]) 
+　　 
+　　-- Print it again using dot 
+　　-- notation 
+　　print(myPolygon.color) 
+　　 
+　　-- The points are accessible 
+　　-- in myPolygon[1] to myPolygon[4] 
+　　 
+　　-- Print the second point’s x 
+　　-- coordinate 
+　　print(myPolygon[2].x) 
+　　 
+　　程序说明 
+　　首先建立一个table, 与上一例不同的是，在table的constructor里面有{x=0,y=0}, 
+　　这是什么意思呢？ 这其实就是一个小table, 定义在了大table之内, 小table的 
+　　table名省略了. 
+　　最后一行myPolygon[2].x，就是大table里面小table的访问方式. 
+　　 
+四.函数的调用 
+
+　1.不定参数 
+　　例e07.lua 
+　　-- Functions can take a 
+　　-- variable number of 
+　　-- arguments. 
+　　function funky_print (...) 
+　　for i=1, arg.n do 
+　　print("FuNkY: " .. arg) 
+　　end 
+　　end 
+　　 
+　　funky_print("one", "two") 
+　　 
+　　运行结果 
+　　FuNkY: one 
+　　FuNkY: two 
+　　 
+　　程序说明 
+　　* 如果以...为参数, 则表示参数的数量不定. 
+　　* 参数将会自动存储到一个叫arg的table中. 
+　　* arg.n中存放参数的个数. arg[]加下标就可以遍历所有的参数. 
+　　 
+　　 
+　　2.以table做为参数 
+　　例e08.lua 
+　　-- Functions with table 
+　　-- parameters 
+　　function print_contents(t) 
+　　for k,v in t do 
+　　print(k .. "=" .. v) 
+　　end 
+　　end 
+　　print_contents{x=10, y=20} 
+　　 
+　　运行结果 
+　　x=10 
+　　y=20 
+　　 
+　　程序说明 
+　　* print_contents{x=10, y=20}这句参数没加圆括号, 因为以单个table为参数的时候, 不需要加圆括号 
+　　* for k,v in t do 这个语句是对table中的所有值遍历, k中存放名称, v中存放值 
+　　 
+　　 
+　　3.把Lua变成类似XML的数据描述语言 
+　　例e09.lua 
+　　function contact(t) 
+　　-- add the contact ‘t’, which is 
+　　-- stored as a table, to a database 
+　　end 
+　　 
+　　contact { 
+　　name = "Game Developer", 
+　　email = "hack@ogdev.net", 
+　　url = "http://www.ogdev.net", 
+　　quote = [[ 
+　　There are 
+　　10 types of people 
+　　who can understand binary.]] 
+　　} 
+　　 
+　　contact { 
+　　-- some other contact 
+　　} 
+　　 
+　　程序说明 
+　　* 把function和table结合, 可以使Lua成为一种类似XML的数据描述语言 
+　　* e09中contact{...}, 是一种函数的调用方法, 不要弄混了 
+　　* [[...]]是表示多行字符串的方法 
+　　* 当使用C API时此种方式的优势更明显, 其中contact{..}部分可以另外存成一配置文件 
+　　 
+　　4.试试看 
+　　想想看哪些地方可以用到例e09中提到的配置方法呢？ 
+　　 
+
+五.Lua与C的交互 
+
+　1.简介 
+　　 
+　　Lua与C/C++结合是很紧密的, Lua与C++交互是建立在Lua与C的基础上的, 所 
+　　以偶先从Lua与C讲起. 
+　　 
+　　正如第一讲所说, 运行Lua程序或者说调用Lua主要有两种方式: 
+　　* 通过命令行执行"Lua"命令 
+　　* 通过Lua的C库 
+　　虽然此前偶们一直用第一种方式, 但偶要告诉你, 通过Lua的C库执行才是游戏中 
+　　常用的方式. 
+　　 
+　　2.Lua的C库 
+　　 
+　　Lua的C库可以做为Shared Library调用, 但一般开发游戏时会把Lua的所有源程序 
+　　都包含在内, 并不把Lua编译成共享库的形式. 因为Lua程序只有100多K, 而且几乎 
+　　可以在任何编译器下Clean Compile. 带Lua源程序的另一个好处时, 可以随时对Lua 
+　　本身进行扩充, 增加偶们所需的功能. 
+　　 
+　　Lua的C库提供一系列API: 
+　　* 管理全局变量 
+　　* 管理tables 
+　　* 调用函数 
+　　* 定义新函数, 这也可以完全由C实现 
+　　* 垃圾收集器Garbage collector, 虽然Lua可以自动进行, 但往往不是立即执行的, 
+　　　所以对实时性要求比较高的程序, 会自己调用垃圾收集器 
+　　* 载入并执行Lua程序, 这也可以由Lua自身实现 
+　　* 任何Lua可以实现的功能, 都可以通过Lua的C API实现, 这对于优化程序的运行速度 
+　　　有帮助. 经常调用的共用的Lua程序片断可以转成C程序, 以提高效率. 连Lua都是C写的 
+　　　还有什么C不能实现呢? 
+　　 
+　　3.Lua与C集成的例子 
+　　例e10.c 
+　　/* A simple Lua interpreter. */ 
+　　#include 
+　　#include 
+　　int main(int argc, char *argv[]) { 
+　　char line[BUFSIZ]; 
+　　lua_State *L = lua_open(0); 
+　　while (fgets(line, sizeof(line), stdin) != 0) 
+　　lua_dostring(L, line); 
+　　lua_close(L); 
+　　return 0; 
+　　} 
+　　 
+　　编译 
+　　Linux/Cygwin 
+　　* 先编译Lua, 并把头文件放入include路径 
+　　* gcc e10.c -llua -llualib -o e10 
+　　 
+　　VC6/VC2003 
+　　* 先编译Lua, 在Option中设置头文件和库文件路径 
+　　* 新建工程,在工程配置中加入附加库lua.lib和lualib.lib 
+　　* 编译成exe 
+　　 
+　　运行结果 
+　　本程序的功能是实现一个Lua解释器, 输入的每行字符都会被解释成Lua并执行. 
+　　 
+　　程序说明 
+　　* #include 包含lua头文件, 然后才可以使用API 
+　　* lua_State *L = lua_open(0) 打开一个Lua执行器 
+　　* fgets(line, sizeof(line), stdin) 从标准输入里读入一行 
+　　* lua_dostring(L, line) 执行此行 
+　　* lua_close(L) 关闭Lua执行器 
+　　 
+　　 
+　　例e11.c 
+　　/* Another simple Lua interpreter. */ 
+　　#include 
+　　#include 
+　　#include 
+　　int main(int argc, char *argv[]) { 
+　　char line[BUFSIZ]; 
+　　lua_State *L = lua_open(0); 
+　　lua_baselibopen(L); 
+　　lua_iolibopen(L); 
+　　lua_strlibopen(L); 
+　　lua_mathlibopen(L); 
+　　while (fgets(line, sizeof(line), stdin) != 0) 
+　　lua_dostring(L, line); 
+　　lua_close(L); 
+　　return 0; 
+　　} 
+　　 
+　　运行结果 
+　　本程序的功能是实现一个Lua解释器, 输入的每行字符都会被解释成Lua并执行. 
+　　与上例不同的是, 本例调用了Lua的一些标准库. 
+　　 
+　　程序说明 
+　　* #include 包含Lua的标准库 
+　　* 以下这几行是用来读入Lua的一些库, 这样偶们的Lua程序就可以有更多的功能. 
+　　lua_baselibopen(L); 
+　　lua_iolibopen(L); 
+　　lua_strlibopen(L); 
+　　lua_mathlibopen(L); 
+　　 
+　　4.试试看 
+　　把上面两个小例子在你熟悉的编译器中编译执行, 并试试能否与Lua源码树一起编译 
+
+六.C/C++中用Lua函数 
+
+1.简介 
+　　偶们这次主要说说怎么由Lua定义函数, 然后在C或者C++中调用. 这里偶们 
+　　暂不涉及C++的对象问题, 只讨论调用函数的参数, 返回值和全局变量的使用. 
+
+　　2.程序 
+　　这里偶们在e12.lua里先定义一个简单的add(), x,y为加法的两个参数, 
+　　return 直接返回相加后的结果. 
+　　 
+　　例e12.lua 
+　　-- add two numbers 
+　　function add ( x, y ) 
+　　return x + y 
+　　end 
+　　 
+　　在前一次里, 偶们说到 lua_dofile() 可以直接在C中执行lua文件. 因为偶们 
+　　这个程序里只定义了一个add()函数, 所以程序执行后并不直接结果, 效果相当 
+　　于在C中定义了一个函数一样. 
+　　 
+　　Lua的函数可以有多个参数, 也可以有多个返回值, 这都是由栈(stack)实现的. 
+　　需要调用一个函数时, 就把这个函数压入栈, 然后顺序压入所有参数, 然后用 
+　　lua_call()调用这个函数. 函数返回后, 返回值也是存放在栈中. 这个过程和 
+　　汇编执行函数调用的过程是一样的. 
+　　 
+　　例e13.cpp 是一个调用上面的Lua函数的例子 
+　　#include 
+　　 
+　　extern "C" { // 这是个C++程序, 所以要extern "C", 
+　　　　 // 因为lua的头文件都是C格式的 
+　　#include "lua.h" 
+　　#include "lualib.h" 
+　　#include "lauxlib.h" 
+　　} 
+　　 
+　　/* the Lua interpreter */ 
+　　lua_State* L; 
+　　 
+　　int luaadd ( int x, int y ) 
+　　{ 
+　　int sum; 
+　　 
+　　/* the function name */ 
+　　lua_getglobal(L, "add"); 
+　　 
+　　/* the first argument */ 
+　　lua_pushnumber(L, x); 
+　　 
+　　/* the second argument */ 
+　　lua_pushnumber(L, y); 
+　　 
+　　/* call the function with 2 
+　　　 arguments, return 1 result */ 
+　　lua_call(L, 2, 1); 
+　　 
+　　/* get the result */ 
+　　sum = (int)lua_tonumber(L, -1); 
+　　lua_pop(L, 1); 
+　　 
+　　return sum; 
+　　} 
+　　 
+　　int main ( int argc, char *argv[] ) 
+　　{ 
+　　int sum; 
+　　 
+　　/* initialize Lua */ 
+　　L = lua_open(); 
+　　 
+　　/* load Lua base libraries */ 
+　　lua_baselibopen(L); 
+　　 
+　　/* load the script */ 
+　　lua_dofile(L, "e12.lua"); 
+　　 
+　　/* call the add function */ 
+　　sum = luaadd( 10, 15 ); 
+　　 
+　　/* print the result */ 
+　　printf( "The sum is %d\n", sum ); 
+　　 
+　　/* cleanup Lua */ 
+　　lua_close(L); 
+　　 
+　　return 0; 
+　　} 
+　　 
+　　程序说明: 
+　　main中过程偶们上次已经说过了, 所以这次只说说luaadd的过程 
+　　* 首先用lua_getglobal()把add函数压栈 
+　　* 然后用lua_pushnumber()依次把x,y压栈 
+　　* 然后调用lua_call(), 并且告诉程序偶们有两个参数一个返回值 
+　　* 接着偶们从栈顶取回返回值, 用lua_tonumber() 
+　　* 最后偶们用lua_pop()把返回值清掉 
+　　 
+　　运行结果: 
+　　The sum is 25 
+　　 
+　　编译方法 
+　　Linux下把程序存成e13.cpp 
+　　g++ e13.cpp -llua -llualib -o e13 
+　　./e13 
+　　 
+　　VC下编译方法 
+　　* 首先建立一个空的Win32 Console Application Project 
+　　* 把e13.cpp加入工程中 
+　　* 点project setting,然后设置link选项, 再加上lua.lib lualib.lib两个额外的库 
+　　* 最后编译 
+　　 
+　　建立好的project可以在这里下载 
+　　VC http://tonyandpaige.com/tutorials/luaadd.zip 
+　　Linux http://tonyandpaige.com/tutorials/luaadd.tar.gz 
+　　 
+　　3.全局变量 
+　　上面偶们用到了lua_getglobal()但并没有详细讲, 这里偶们再举两个小例子来说下全局变量 
+　　lua_getglobal()的作用就是把lua中全局变量的值压入栈 
+　　lua_getglobal(L, "z"); 
+　　z = (int)lua_tonumber(L, 1); 
+　　lua_pop(L, 1); 
+　　假设Lua程序中定义了一个全局变量z, 这段小程序就是把z的值取出放入C的变量z中. 
+　　 
+　　另外Lua中还有一个对应的函数lua_setglobal(), 作用是用栈顶的值填充指定的全局变量 
+　　lua_pushnumber(L, 10); 
+　　lua_setglobal(L, "z"); 
+　　例如这段小程序就是把lua中的全局变量z设为10, 如果lua中未定义z的话, 就会自动创建一个 
+　　全局变量z并设为10. 
+　　 
+　　4.试试看 
+　　自己写个函数用C/C++来调用下试试 
+
+七.调用C/C++函数 
+
+1.前言 
+　　上次偶说到从C/C++中调用Lua的函数, 然后就有朋友问从Lua中如何调用C/C++的 
+　　函数, 所以偶们这次就来说说这个问题. 首先偶们会在C++中建立一个函数, 然后 
+　　告知Lua有这个函数, 最后再执行它. 另外, 由于函数不是在Lua中定义的, 所以 
+　　无法确定函数的正确性, 可能在调用过程中会出错, 因此偶们还会说说Lua出错处 
+　　理的问题. 
+　　 
+　　2.Lua中调用C函数 
+　　在lua中是以函数指针的形式调用函数, 并且所有的函数指针都必须满足如下此种 
+　　类型: 
+　　typedef int (*lua_CFunction) (lua_State *L); 
+　　 
+　　也就是说, 偶们在C++中定义函数时必须以lua_State为参数, 以int为返回值才能 
+　　被Lua所调用. 但是不要忘记了, 偶们的lua_State是支持栈的, 所以通过栈可以 
+　　传递无穷个参数, 大小只受内存大小限制. 而返回的int值也只是指返回值的个数 
+　　真正的返回值都存储在lua_State的栈中. 偶们通常的做法是做一个wrapper, 把 
+　　所有需要调用的函数都wrap一下, 这样就可以调用任意的函数了. 
+　　 
+　　下面这个例子是一个C++的average()函数, 它将展示如何用多个参数并返回多个值 
+　　 
+　　例e14.cpp 
+　　#include 
+　　 
+　　extern "C" { 
+　　#include "lua.h" 
+　　#include "lualib.h" 
+　　#include "lauxlib.h" 
+　　} 
+　　 
+　　/* the Lua interpreter */ 
+　　lua_State* L; 
+　　 
+　　static int average(lua_State *L) 
+　　{ 
+　　/* get number of arguments */ 
+　　int n = lua_gettop(L); 
+　　double sum = 0; 
+　　int i; 
+　　 
+　　/* loop through each argument */ 
+　　for (i = 1; i <= n; i++) 
+　　{ 
+　　/* total the arguments */ 
+　　sum += lua_tonumber(L, i); 
+　　} 
+　　 
+　　/* push the average */ 
+　　lua_pushnumber(L, sum / n); 
+　　 
+　　/* push the sum */ 
+　　lua_pushnumber(L, sum); 
+　　 
+　　/* return the number of results */ 
+　　return 2; 
+　　} 
+　　 
+　　int main ( int argc, char *argv[] ) 
+　　{ 
+　　/* initialize Lua */ 
+　　L = lua_open(); 
+　　 
+　　/* load Lua base libraries */ 
+　　lua_baselibopen(L); 
+　　 
+　　/* register our function */ 
+　　lua_register(L, "average", average); 
+　　 
+　　/* run the script */ 
+　　lua_dofile(L, "e15.lua"); 
+　　 
+　　/* cleanup Lua */ 
+　　lua_close(L); 
+　　 
+　　return 0; 
+　　} 
+　　 
+　　例e15.lua 
+　　-- call a C++ function 
+　　 
+　　avg, sum = average(10, 20, 30, 40, 50) 
+　　 
+　　print("The average is ", avg) 
+　　print("The sum is ", sum) 
+　　 
+　　 
+　　程序说明: 
+　　* lua_gettop()的作用是返回栈顶元素的序号. 由于Lua的栈是从1开始编号的, 
+　　　所以栈顶元素的序号也相当于栈中的元素个数. 在这里, 栈中元素的个数就 
+　　　是传入的参数个数. 
+　　* for循环计算所有传入参数的总和. 这里用到了数值转换lua_tonumber(). 
+　　* 然后偶们用lua_pushnumber()把平均值和总和push到栈中. 
+　　* 最后, 偶们返回2, 表示有两个返回值. 
+　　* 偶们虽然在C++中定义了average()函数, 但偶们的Lua程序并不知道, 所以需 
+　　　要在main函数中加入 
+　　 
+　　　 /* register our function */ 
+　　lua_register(L, "average", average); 
+　　 
+　　　这两行的作用就是告诉e15.lua有average()这样一个函数. 
+　　* 这个程序可以存成cpp也可以存成c, 如果以.c为扩展名就不需要加extern "C" 
+　　 
+　　编译的方法偶们上次说过了, 方法相同. 
+　　e15.lua执行的方法只能用上例中的C++中执行, 而不能用命令行方式执行. 
+　　 
+　　3.错误处理 
+　　在上例中, 偶们没有对传入的参数是否为数字进行检测, 这样做不好. 所以这里偶 
+　　们再加上错误处理的片断. 
+　　 
+　　把这段加在for循环之内: 
+　　if (!lua_isnumber(L, i)) { 
+　　lua_pushstring(L, "Incorrect argument to 'average'"); 
+　　lua_error(L); 
+　　} 
+　　这段的作用就是检测传入的是否为数字. 
+　　 
+　　加上这段之后, 偶们debug的时候就会简单许多. 对于结合两种语言的编程, 它们之 
+　　间传递数据的正确性检测是非常重要的. 
+
+
