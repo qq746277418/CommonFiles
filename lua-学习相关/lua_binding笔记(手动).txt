@@ -1,0 +1,96 @@
+*lua binding部分
+1. 绑定c++类到lua使用
+	1.需要实现lua所需要的各个接口的tolua实现内容<以下示例及说明>
+		static int tolua_CircleBy_create(lua_State *tolua_S)
+		{
+			int argc = lua_gettop(tolua_S);   	【*1】
+			CirCleBy *obj = nullptr;
+			if (3 == argc-1) 					【*2】 
+			{   
+				double arg0 = lua_tonumber(tolua_S, 2);	【*3】
+				cocos2d::Vec2 arg1;
+				luaval_to_vec2(tolua_S,3, &arg1, "tolua_CircleBy_create");
+				double arg2 = lua_tonumber(tolua_S, 4);
+				obj = CirCleBy::create(arg0,arg1,arg2);
+			}
+			int nID = (nullptr != obj) ? obj->_ID : -1;
+			int *pLuaID = (nullptr != obj) ? &obj->_luaID : nullptr;
+			toluafix_pushusertype_ccobject(tolua_S,nID,pLuaID,(void*)obj, "cc.CircleBy"); 【*4】
+			return 1;
+		}
+		*1. 获取栈高度(主要用于校验参数个数合法问题)
+		*2. argc-1(去除栈底元素, 因为栈底可以理解为存储的是当前对象)
+		*3. 从下往上获取第二个值
+		*4. 返回这个对象。
+	2. 实现register_all_xxxObj方法统一绑定, 主要是绑定到lua的接口名
+		int register_all_Circleasset()
+		{
+		#if CC_ENABLE_SCRIPT_BINDING
+			lua_State* tolua_S = LuaEngine::getInstance()->getLuaStack()->getLuaState(); 【*1】    
+			tolua_usertype(tolua_S, "cc.CircleBy"); 【*2】
+			tolua_cclass(tolua_S,"CirCleBy","cc.CircleBy","cc.ActionInterval",nullptr); 【*3】	    
+			tolua_beginmodule(tolua_S,"CirCleBy"); 【*4】	  
+			tolua_function(tolua_S,"create",tolua_CircleBy_create); 【*5】	  
+			tolua_endmodule(tolua_S); 【*6】		    
+			std::string typeName = typeid(CirCleBy).name();
+			g_luaType[typeName] = "cc.CircleBy";
+			g_typeCast["CirCleBy"] = "cc.CircleBy"; 【*7】
+		#endif
+		return 1;
+		}
+		*1 获取当前这个栈的对象指针
+		*2 根据 cc.CircleBy 类型创建一张userdata的表
+		*3 注册相关类对象
+		*4 开始在userdata表中写入
+		*5 写入函数 tolua_CircleBy_create 并命名为 create
+		*6 结束userdata表的写入
+		*7 就是吧"cc.CircleBy"声明成"CirCleBy"的全局对象推入到lua中
+2. 在其他模块中调用lua的使用(使用 cc.exports 关键声明全局变量或函数)
+	1.java中调用lua
+		java调用lua函数,参照AppActivity.java line：633  根据全局函数名获取函数并调用,安卓平台cocos已实现。
+		#param Cocos2dxLuaJavaBridge.callLuaGlobalFunctionWithString(funName, msg);
+	2.oc中调用lua
+		ios平台 AppController.mm中实现了lua全局方法的获取方法： toLuaGlobalFunC (可以查看具体实现)
+		- (void) toLuaGlobalFunC: (std::string) funName msg:(std::string) msg
+		{
+		#if CC_ENABLE_SCRIPT_BINDING
+			lua_State* tolua_S = LuaEngine::getInstance()->getLuaStack()->getLuaState();
+			lua_getglobal(tolua_S, funName.c_str());
+			if (!lua_isfunction(tolua_S, -1))
+			{
+				CCLOG("value at stack [%d] is not function", -1);
+				lua_pop(tolua_S, 1);
+			}
+			else
+			{
+				lua_pushstring(tolua_S, msg.c_str());
+				int iRet = lua_pcall(tolua_S, 1, 0, 0);
+				if (iRet)
+				{
+				    log("call lua fun error:%s", lua_tostring(tolua_S, -1));
+				    lua_pop(tolua_S, 1);
+				}
+			}
+		#endif
+		}
+	3.c++中调用lua
+		这里也写一段调用lua函数的示例
+		local HANDLER = "这是一个lua定义的函数"
+		#if CC_ENABLE_SCRIPT_BINDING
+			if (0 != HANDLER)
+			{
+				lua_State* tolua_S = LuaEngine::getInstance()->getLuaStack()->getLuaState();
+				toluafix_get_function_by_refid(tolua_S, HANDLER); 【*1】
+				if (lua_isfunction(tolua_S, -1))
+				{
+				    toluafix_pushusertype_ccobject(tolua_S, this->_ID, &(this->_luaID), (void*)this, "cc.CurlAsset");【*2】
+				    lua_pushinteger(tolua_S, nRes); 【*3】
+				    lua_pushstring(tolua_S, msg.c_str());
+				    LuaEngine::getInstance()->getLuaStack()->executeFunctionByHandler(HANDLER, 3); 【*4】
+				}
+			}
+		#endif
+		*1. 生成一个function_id并且绑定到栈中
+		*2. 生成对象id并存储起来, 在调用时传入给lua
+		*3. 往栈中压入一个整型参数
+		*4. 通过句柄开始调用函数了, 至于第二个参数是函数参数个数
