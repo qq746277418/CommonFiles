@@ -1,4 +1,3 @@
-我只是 想测试一下 回滚提交
 local Bubble = class("Bubble", function()
     return display.newSprite()
 end)
